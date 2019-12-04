@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.my.app.guide.model.weather.WeatherDTO;
+import com.my.app.guide.model.wthrfrcst.WeatherForecastDTO;
 
 import reactor.core.publisher.Mono;
 
@@ -29,5 +30,17 @@ public class WeatherClient {
 				.accept(MediaType.APPLICATION_JSON)
 				.exchange()
 				.flatMap(r -> r.bodyToMono(WeatherDTO.class));
+	}
+	
+	public Mono<WeatherForecastDTO> getWeatherForecast(String cityName) {
+		return weatherClient.get()
+				.uri(builder -> builder.path("/forecast")
+						.queryParam("q", cityName)
+						.queryParam("units", "metric")
+						.queryParam("appid", weather_secret_api_key)
+						.build())
+				.accept(MediaType.APPLICATION_JSON)
+				.exchange()
+				.flatMap(r -> r.bodyToMono(WeatherForecastDTO.class));
 	}
 }
