@@ -1,6 +1,5 @@
 package com.my.app.guide.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,10 @@ import org.thymeleaf.spring5.context.webflux.IReactiveDataDriverContextVariable;
 import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
 
 import com.my.app.guide.model.WeatherCard;
-import com.my.app.guide.model.weather.WeatherDTO;
 import com.my.app.guide.repository.WeatherForecastRepository;
 import com.my.app.guide.repository.WeatherRepository;
 
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Controller
 public class MainController {
@@ -28,15 +26,17 @@ public class MainController {
 	@RequestMapping("/")
 	public String index(final Model model) {
 		
-		List<WeatherCard> weatherCard = new ArrayList<>();
-		
-		Flux<WeatherDTO> weathers = weatherRepository.findAll();
+		Mono<List<WeatherCard>> weatherCard = weatherRepository.findAll().
+				flatMap(w -> weatherForecastRepository.findByCity(w.getName())
+						.map(f -> new WeatherCard(w.getName(), w, f))
+						)
+				.collectList();
 
 		IReactiveDataDriverContextVariable reactiveWeatherModel =
-                new ReactiveDataDriverContextVariable(weatherRepository.findAll(), 1);
+                new ReactiveDataDriverContextVariable(weatherCard, 1);
 		
 		
-		model.addAttribute("weathers", reactiveWeatherModel);
+		model.addAttribute("weatherCard", reactiveWeatherModel);
 		
 		return "index";
 	}

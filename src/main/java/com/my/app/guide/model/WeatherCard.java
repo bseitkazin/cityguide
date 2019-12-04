@@ -7,6 +7,13 @@ public class WeatherCard {
 	private String city;
 	private WeatherDTO weather;
 	private WeatherForecastDTO forecast;
+	
+	public WeatherCard(String city, WeatherDTO weather, WeatherForecastDTO forecast) {
+		this.city = city;
+		this.weather = weather;
+		this.forecast = forecast;
+	}
+	
 	public String getCity() {
 		return city;
 	}
