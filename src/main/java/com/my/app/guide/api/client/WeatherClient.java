@@ -16,7 +16,7 @@ public class WeatherClient {
 	private static final String WEATHER_API_URI = "http://api.openweathermap.org/data/2.5";
 	
 	@Value("${weatherSecretApiKey}")
-	private String weather_secret_api_key = "7403c05efb3bca83e22618c5491aebf8";
+	private String weather_secret_api_key;
 	
 	WebClient weatherClient = WebClient.create(WEATHER_API_URI);
 	
