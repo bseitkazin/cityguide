@@ -8,6 +8,7 @@ public class WeatherDTO {
 	private String base;
 	private Main main;
 	private int visibility;
+	private Wind wind;
 	private Cloud clouds;
 	private int dt;
 	private WeatherSystem sys;
@@ -87,5 +88,11 @@ public class WeatherDTO {
 	}
 	public void setCod(int cod) {
 		this.cod = cod;
+	}
+	public Wind getWind() {
+		return wind;
+	}
+	public void setWind(Wind wind) {
+		this.wind = wind;
 	}
 }

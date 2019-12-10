@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.my.app.guide.model.WeatherCard;
 import com.my.app.guide.model.weather.WeatherDTO;
 import com.my.app.guide.model.wthrfrcst.WeatherForecastDTO;
 
@@ -20,7 +21,7 @@ public class WeatherClient {
 	
 	WebClient weatherClient = WebClient.create(WEATHER_API_URI);
 	
-	public Mono<WeatherDTO> getWeatherByCityName(String cityName) {
+	private Mono<WeatherDTO> getWeatherByCityName(String cityName) {
 		return weatherClient.get()
 				.uri(builder -> builder.path("/weather")
 						.queryParam("q", cityName)
@@ -32,7 +33,7 @@ public class WeatherClient {
 				.flatMap(r -> r.bodyToMono(WeatherDTO.class));
 	}
 	
-	public Mono<WeatherForecastDTO> getWeatherForecast(String cityName) {
+	private Mono<WeatherForecastDTO> getWeatherForecast(String cityName) {
 		return weatherClient.get()
 				.uri(builder -> builder.path("/forecast")
 						.queryParam("q", cityName)
@@ -42,5 +43,13 @@ public class WeatherClient {
 				.accept(MediaType.APPLICATION_JSON)
 				.exchange()
 				.flatMap(r -> r.bodyToMono(WeatherForecastDTO.class));
+	}
+	
+	public Mono<WeatherCard> getWeather(String cityName) {
+		return getWeatherByCityName(cityName)
+				.zipWith(
+						getWeatherForecast(cityName), 
+						(a, b) -> new WeatherCard(cityName, a, b)
+						);
 	}
 }
