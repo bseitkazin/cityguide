@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.my.app.guide.api.client.WeatherClient;
-import com.my.app.guide.model.weather.WeatherDTO;
+import com.my.app.guide.model.WeatherCard;
 
 import reactor.core.publisher.Mono;
 
@@ -19,7 +19,7 @@ public class WeatherController {
 	private WeatherClient weatherClient;
 	
 	@GetMapping("/weather/{city-name}")
-	private Mono<WeatherDTO> getWeatherByCityName(@PathVariable(name = "city-name") String cityName) {
-		return weatherClient.getWeatherByCityName(cityName);
+	private Mono<WeatherCard> getWeatherByCityName(@PathVariable(name = "city-name") String cityName) {
+		return weatherClient.getWeather(cityName);
 	}
 }
